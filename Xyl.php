@@ -1430,7 +1430,7 @@ class          Xyl
                 $link = $handle;
             }
 
-            if(0 !== preg_match('#^hoa://Application/Public/(.+/.+)$#', $link, $m)) {
+            else if(0 !== preg_match('#^hoa://Application/Public/(.+/.+)$#', $link, $m)) {
 
                 $theme  = $this->getParameters()->getFormattedParameter('theme');
                 list($type, $resource) = explode('/', $m[1], 2);
@@ -1456,6 +1456,12 @@ class          Xyl
                     $rule,
                     array('theme' => $theme, 'resource' => $resource)
                 );
+            }
+
+            else if(0 !== preg_match('#^hoa://([^/]+)/Public(/.+)$#', $link, $m)) {
+                if (null !== ($prefixUrl = \Hoa\Core::getInstance()->getParameters()->getParameter('url.'.$m[1]))) {
+                    return $prefixUrl . $m[2];
+                }
             }
 
             return $this->resolve($link, $late);
